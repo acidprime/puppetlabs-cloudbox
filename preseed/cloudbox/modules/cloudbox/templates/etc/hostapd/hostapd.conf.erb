@@ -1,0 +1,17 @@
+interface=<%= @hostapd_interface %>
+bridge=<%= @hostapd_bridge %>
+driver=nl80211
+ssid=<%= @hostapd_ssid %>
+channel=11
+hw_mode=g
+auth_algs=1
+<% if @hostapd_wpa -%>
+wpa=3
+wpa_passphrase=<%= @hostapd_wpa_passphrase %>
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP CCMP
+rsn_pairwise=CCMP
+wpa_group_rekey=604300
+<% elsif -%>
+wpa=0
+<% end -%>

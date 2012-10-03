@@ -1,0 +1,27 @@
+#!/bin/bash
+
+ANSWER_FILE='/cloudbox/cloudbox.puppetlabs.vm-answers.txt'
+
+# Install Puppet Enterprise
+/cloudbox/puppet-enterprise-2.5.3-ubuntu-12.04-amd64/puppet-enterprise-installer \
+    -a "${ANSWER_FILE:?}" | tee -a /cloudbox/cloudbox.log 
+source "${ANSWER_FILE:?}" 
+
+# Remove the mysql root users password
+mysql \
+  --user=root \
+  --password="$q_puppet_enterpriseconsole_database_root_password" \
+  -e "SET PASSWORD FOR root@localhost=PASSWORD('');" | tee -a /cloudbox/cloudbox.log
+
+# Trigger the puppet run to configure openstack
+for x in 1 2 3 ; do
+/opt/puppet/bin/puppet apply \
+  --modulepath=/cloudbox/modules/ \
+  /cloudbox/manifests/site.pp | tee -a /cloudbox/cloudbox.log
+done
+
+# Disable this for next reboot
+if [ -f /opt/puppet/bin/puppet ] ; then
+  printf "#!/bin/bash\nexit 0\n" >/etc/rc.local
+fi 
+exit 0

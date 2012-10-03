@@ -1,0 +1,84 @@
+{
+  "project_page": "http://github.com/puppetlabs/puppetlabs-glance",
+  "license": "Apache",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "version_requirement": ">= 0.1.0",
+      "name": "ripienaar/concat"
+    },
+    {
+      "version_requirement": ">= 0.1.0",
+      "name": "puppetlabs/keystone"
+    },
+    {
+      "version_requirement": ">= 0.3.0",
+      "name": "puppetlabs/mysql"
+    },
+    {
+      "version_requirement": ">= 2.3.0",
+      "name": "puppetlabs/stdlib"
+    }
+  ],
+  "summary": "Glance Puppet Module",
+  "source": "git://github.com/puppetlabs/puppetlabs-glance",
+  "checksums": {
+    "templates/api/backend.erb": "5d4203e37e5e7f0d4781f33dcba62238",
+    "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
+    "spec/classes/glance_backend_swift_spec.rb": "17a611dc2497e7a049cd2750ac600a03",
+    "templates/glance-registry.conf.erb": "7838e475372c7741e06bdb87517882ad",
+    "templates/api/swift.erb": "e3d2c02f536adce0c813f22833dde4b0",
+    "templates/api/footer.erb": "2e785adfbd931f85a82776cc47d47265",
+    "spec/classes/glance_spec.rb": "127ba483b62e5d46281c2660e6b41873",
+    "spec/classes/glance_db_mysql_spec.rb": "027abeb773e35df0126aa638e223bd70",
+    "spec/classes/glance_api_spec.rb": "ef8c3735de4c059f74d844cc2eaa510d",
+    "Modulefile": "fab50d3c17c6c526fd613024dd3d2bd5",
+    "manifests/registry.pp": "06266693bfcaba34176cf417467c04d7",
+    "manifests/notify/qpid.pp": "06fa2d5786e8878d000c83acbed790f0",
+    "CHANGELOG": "20dbf556ee51fa0f4e9e865c5f6f1936",
+    "spec/classes/glance_backend_file_spec.rb": "e8748336a5c7af87f7e13caec7136241",
+    "manifests/params.pp": "5f69c719676a3731ef0b15311480a6cc",
+    "manifests/api/config.pp": "095fdf641410f9435f39e36c68cb1087",
+    "ext/glance.rb": "00e2ca50f6dc6b52f61ccf04c2b4c19d",
+    "tests/api.pp": "cfa8c9754e911f85ccc14e94fffd576d",
+    "templates/api/header.erb": "6c49cb00921ac22465895cd31b70f235",
+    "templates/api/file.erb": "91ec31d59ff8a7ee311664a2269913b2",
+    "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
+    "spec/classes/glance_keystone_auth_spec.rb": "d3b212cd8f09b17ae0acfb17d067d97c",
+    "manifests/init.pp": "38bc1e1b7d90f97d2aa2ea8a3468f238",
+    "templates/api/notify.erb": "7b02b8272dbea9922c9377aa24f18211",
+    "spec/classes/glance_notify_rabbitmq_spec.rb": "8d992cf888a871d77998490d8d975c42",
+    "templates/glance-cache.conf.erb": "fe7d9dc9cb18cdc823d9f251dde05f60",
+    "spec/classes/glance_registry_spec.rb": "7e2e918eb974c84700e56316a930c68a",
+    "Rakefile": "0254db5d3fc38c67a2c160d7296a24f8",
+    "manifests/notify/rabbitmq.pp": "5ef7e3d4e2f1024bacd7bf3d3f7bef26",
+    "manifests/db/mysql.pp": "c3a2ecb73c39b6ef04c58a03c547c8e5",
+    "manifests/backend/swift.pp": "c788e216b8f50847f6825ecb23cf845d",
+    "examples/single.pp": "a8ef4cd485a5ee9dc0efd3dd5ca18fd3",
+    "tests/registry.pp": "be8e7b2f040cd6c3f70e87568675b7ac",
+    "spec/classes/glance_client_spec.rb": "0d50df9f25e86cb047749085978c7ad0",
+    "manifests/notify.pp": "21ac497ae843b347942c291141383873",
+    "manifests/backend/file.pp": "b0734171f6f871b9a251385cad634fac",
+    "tests/init.pp": "0df45b7489688f7cfde9231466305ffe",
+    "templates/api/qpid.erb": "9901236539d5d248240f815ca0ec89d7",
+    "spec/classes/glance_notify_qpid_spec.rb": "3923c137f100c77ed4a831ee661028de",
+    "README.markdown": "041a5f0bbaeec19a6e1793ae061f5692",
+    "manifests/db/mysql/host_access.pp": "6f1ad8adefd39eee6ec0ffd45417c97e",
+    "manifests/client.pp": "7f364e1942f7f736e336f3db4f50e31b",
+    "TODO": "19e3ff44c7aba3425932fbcb4b22ca89",
+    "templates/glance-api-paste.ini.erb": "b34eec4e6f12d6556d5efd4f0fa3ebe9",
+    "spec/fixtures/manifests/site.pp": "d41d8cd98f00b204e9800998ecf8427e",
+    "templates/glance-registry-paste.ini.erb": "04ed30d372b13f3a41a5279619121abc",
+    "templates/api/rabbitmq.erb": "bcf88a4df34f729a0b8b139e43a92515",
+    "manifests/scrubber.pp": "dfada3bdee94f56bca3f80f543382c4a",
+    "manifests/keystone/auth.pp": "c72f4b6771c067a11e82f75c0d5259af",
+    "manifests/api.pp": "b140499f3d7438d5723c35139db707dd",
+    "ext/glance.sh": "d4a51eea6741cadfcc699daf376e3528"
+  },
+  "types": [
+
+  ],
+  "description": "Openstack Glance module. Tested on Ubuntu",
+  "author": "Puppet Labs",
+  "name": "puppetlabs-glance"
+}

@@ -1,0 +1,28 @@
+{
+  "license": "Apache License 2.0",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "version_requirement": ">= 2.0.1",
+      "name": "saz/memcached"
+    }
+  ],
+  "summary": "Horizon Dashboard Module for Puppet",
+  "source": "https://github.com/puppetlabs/puppetlabs-horizon",
+  "description": "UNKNOWN",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-horizon",
+  "author": "Puppet Labs",
+  "checksums": {
+    "manifests/params.pp": "6b3ae4ef6af35d386caae36e9ad6521d",
+    "manifests/init.pp": "cdac661cf172b44d7c58a402d75b71ec",
+    "Modulefile": "7d8f4a36dead15a6ba42c38f6f64c129",
+    "templates/local_settings.py.erb": "29fbde0ef7509196d09661c69a43fb75",
+    "README.md": "02fe6d03879d8ede05a3f7187b239f2b",
+    "CHANGELOG": "51fdd9981e0712683546678ecd424824",
+    "LICENSE": "b3f8a01d8699078d82e8c3c992307517"
+  },
+  "types": [
+
+  ],
+  "name": "puppetlabs-horizon"
+}

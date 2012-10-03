@@ -1,0 +1,14 @@
+ddns-update-style none;
+option domain-name "puppetlabs.vm";
+option domain-name-servers 10.0.0.1, 4.2.2.1;
+
+default-lease-time 3100;
+max-lease-time 604800;
+log-facility local7;
+subnet 10.0.0.0 netmask 255.255.255.0 {
+  range 10.0.0.150 10.0.0.253;
+  option routers 10.0.0.1;
+  option subnet-mask 255.255.255.0;
+  option domain-name-servers 10.0.0.1, 4.2.2.1;
+  option broadcast-address 10.0.0.254;
+}

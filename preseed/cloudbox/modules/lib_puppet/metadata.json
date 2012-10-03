@@ -1,0 +1,28 @@
+{
+  "author": "Puppet Labs",
+  "types": [
+
+  ],
+  "version": "0.0.1",
+  "license": "Apache License 2.0",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-lib_puppet",
+  "source": "https://github.com/puppetlabs/puppetlabs-lib_puppet",
+  "checksums": {
+    "spec/spec_helper.rb": "a55d1e6483344f8ec6963fcb2c220372",
+    "lib/facter/puppet_install_dir.rb": "b8f2ab747165a6f63feb82a984bc167f",
+    "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+    "README.md": "4dcab3a9b52f4e1d09df3d3c5aaebcc4",
+    "tests/init.pp": "fcf17633004c59cb587064d8fd5bb0ef",
+    "files/lib/puppet/demo": "d41d8cd98f00b204e9800998ecf8427e",
+    "tests/local_sync.pp": "67cbf732c983edaf4bf256643edcc1e7",
+    "Modulefile": "801237c82c4a918ede8024401dfe667d",
+    "manifests/init.pp": "d7f9eb789ef62a775e5d9a6b132ca41a",
+    "lib/puppet/parser/functions/local_sync.rb": "7e5791f22181638494955451cecb8cca"
+  },
+  "dependencies": [
+
+  ],
+  "name": "puppetlabs-lib_puppet",
+  "summary": "Puppet Labs lib_puppet module",
+  "description": "Define resource type for managing files in lib/puppet."
+}

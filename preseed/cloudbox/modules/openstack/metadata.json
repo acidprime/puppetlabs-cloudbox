@@ -1,0 +1,59 @@
+{
+  "license": "Apache License 2.0",
+  "version": "0.1.0",
+  "types": [
+
+  ],
+  "dependencies": [
+    {
+      "version_requirement": ">= 0.1.0",
+      "name": "puppetlabs/glance"
+    },
+    {
+      "version_requirement": ">= 0.1.0",
+      "name": "puppetlabs/horizon"
+    },
+    {
+      "version_requirement": ">= 0.1.0",
+      "name": "puppetlabs/keystone"
+    },
+    {
+      "version_requirement": ">= 2.0.1",
+      "name": "saz/memcached"
+    },
+    {
+      "version_requirement": ">= 0.3.0",
+      "name": "puppetlabs/mysql"
+    },
+    {
+      "version_requirement": ">= 0.1.0",
+      "name": "puppetlabs/nova"
+    }
+  ],
+  "project_page": "https://github.com/puppetlabs/puppetlabs-openstack",
+  "summary": "Puppet Labs Openstack Module",
+  "source": "https://github.com/puppetlabs/puppetlabs-openstack",
+  "description": "Module to install common openstack configurations using puppet",
+  "author": "Puppet Labs",
+  "name": "puppetlabs-openstack",
+  "checksums": {
+    "manifests/all.pp": "a18513d2e7052d5c013e62a9aeac2ee9",
+    "spec/classes/openstack_controller_spec.rb": "8f0367922f58ce40a2cccf234c3bc7ed",
+    "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
+    "README.md": "1b144f22174e9c19a9b8400715e590e7",
+    "other_repos.yaml": "7693a7bcce2ed6cf20d9ecc1711c4231",
+    "manifests/controller.pp": "2cda4804b3a9f05c8ded34bb017e8709",
+    "LICENSE": "0e5ccf641e613489e66aa98271dbe798",
+    "examples/site.pp": "a8f72381f6bfcea80cc0006113736d7a",
+    "README.dev.md": "4f5baeaebb75e7130037591797295b18",
+    "spec/classes/openstack_compute_spec.rb": "b744b1d7687874bfbc35692f2bb376fb",
+    "spec/classes/openstack_all_spec.rb": "3f3e744ccaf88cef00e41aaa5b483cc7",
+    "Rakefile": "0ad16af3ed4fe4fe224d658d077574d7",
+    "files/nova_test.sh": "f4d5f69008efa9b6af11dca3a27141ba",
+    "spec/fixtures/manifests/site.pp": "d41d8cd98f00b204e9800998ecf8427e",
+    "Modulefile": "a0d7ac4bf82e0f08c78ea0dd7284902e",
+    "manifests/compute.pp": "81f7acbe3c44e92e9fa3487fa50da502",
+    "manifests/auth_file.pp": "e3277231fc004551574e7cc0ad71bdc9",
+    "CHANGELOG": "bdfa9da0ef550fd8f111f4f8e1f38630"
+  }
+}
