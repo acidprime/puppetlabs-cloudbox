@@ -61,6 +61,19 @@ task :init do
   end
   cputs "Copying iso files to working directory..."
   FileUtils.cp_r("#{SAVEDIR}/iso_mount/.","#{SAVEDIR}/ubuntu_files")
+
+  # Grab the copy of PE for the hypervisor
+  unless File.exist?("#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz")
+    cputs "Downloading PE #{PEVERSION} for hypervisor..."
+    download "#{PE_URL}/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz", "#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz"
+  end
+
+  # Extract the installer
+  unless File.exist?("#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}")
+    FileUtils.cd("#{RUNDIR}/preseed/cloudbox/", :verbose => true)
+    %x{ tar -xzf "puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz" }
+  end
+
   # Add our customizations to the iso
   cputs "Configuring preseeding..."
   FileUtils.cp_r("#{RUNDIR}/preseed/.","#{SAVEDIR}/ubuntu_files/preseed/")
@@ -81,18 +94,6 @@ task :init do
   if File.exists?("#{SAVEDIR}/#{NEW_ISO_FILE}")
     cputs "Removing previous iso..."
     FileUtils.rm("#{SAVEDIR}/#{NEW_ISO_FILE}")
-  end
-
-  # Grab the copy of PE for the hypervisor
-  unless File.exist?("#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz")
-    cputs "Downloading PE #{PEVERSION} for hypervisor..."
-    download "#{PE_URL}/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz", "#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz"
-  end
-
-  # Extract the installer
-  unless File.exist?("#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}")
-    FileUtils.cd("#{RUNDIR}/preseed/cloudbox/", :verbose => true)
-    %x{ tar -xzf "puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz" }
   end
 
   # Make sure we have syslinux for mbr binary
