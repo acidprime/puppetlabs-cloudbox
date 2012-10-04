@@ -5,7 +5,7 @@ These instructions cover building a new cloudbox
 + 16.0GB (8.0GB x 2 Kit) PC10600 DDR3 1333MHz SO-DIMM 204 Pin  
   
 ## Software specifications  
-+ Ubuntu 12.0.4 (Precise)  
++ Ubuntu 12.0.4 (Precise) 64 bit 
 + Openstack 2012.X (ESSEX)  
   
 ## Introduction   
@@ -27,7 +27,8 @@ The setup process for the hypervisor has been automated using puppet modules. Th
 allow you to build an preseed'ed ubuntu install that will classify the modules.  
   
 ## Instructions for building preseeded iso   
-These steps are only nessary if you do not already have a cloudbox thumb drive, or would like to update it.  
+These steps are only nessary if you do not already have a cloudbox thumb drive, or would like to update it. 
+They are designed to be run from the unit itself, or in a ubuntu 12.0.4 virtual machine  
 `git clone git@github.com:acidprime/puppetlabs-cloudbox.git`    
 `cd puppetlabs-cloudbox`    
 `rake init`    
