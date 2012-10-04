@@ -10,8 +10,15 @@ These instructions cover building a new cloudbox
 
 ## Introduction 
 This solution was built to replace student virtual machines in the puppet training labs.
+Multiple things prompted its creation:
+1. The lack of interconnectivity on the wireless networks at microtek training sites.
+2. The expensive class time of getting a large number of student virtual machines running.
+3. To show off the puppet cloud provisioner in the training classes.
+
 The solution acts as a wireless access point and allows students to connect to the private openstack network.
 Internet access ( if avaiable is provided by the systems built in ethernet port eth0 )
+Each student simply needs an ssh client and wireless card to complete the class.
+If a student is unable to connect to the wireless due to hardware issues, the horizon interface has a vnc console that runs in most web browsers.
 
 ### Virtual machines
 Virtual machines are automatically allocated using a puppet enterprise console parameter.
@@ -57,19 +64,19 @@ __working on script/face for this__
 Once all virtual machines are suspended ( not paused ) you can issue a `shutdown -h now` command.
 
 ## Handy commands to know
-`source /root/openrc`
+`source /root/openrc`  
 This command store the credentials used for the command line utils.
-`nova-manage vm list`
+`nova-manage vm list`  
 Get a list of the current running virtual machines.
-`nova suspend _instanceid_`
+`nova suspend _instanceid_`  
 Suspend the specified instance
-`nova resume`
+`nova resume`  
 Resume the specified instance
-`nova reboot`
+`nova reboot`  
 Reboot the specified instance
-`keystone --token puppet user-list`
+`keystone --token puppet user-list`  
 View the user list in keystone
-`keystone --token puppet tenant-list`
+`keystone --token puppet tenant-list`  
 View the tenant (group) list in keystone
 # Technical overview
 This section is a technial overview of the software setup.
@@ -121,18 +128,36 @@ You can find the pem file at `/root/.ssh/students.pem`
 ## Student vitural machine upload.
 The student virtual machine is automatically copied during the rake process and copied to the /cloudbox build directory.
 This VM is automatically uploaded to glance by the `cloudbox::image` class.
-I am working on automating the creation of these `qcow2` images using a rake file. However currently the old build process is able to easily build them:
+I am working on automating the creation of these `qcow2` images using a rake file. However currently the [old](https://github.com/puppetlabs/puppetlabs-training-bootstrap) build process is able to easily build them:
 
 1. ` kvm-img create -f qcow2 centos-5.7-pe-2.5.2.img 4G`
-2. `kvm -m 1024 -cdrom boot.iso -drive file=centos-5.7-pe-2.5.2.img,if=virtio,index=0 -boot d -net nic -net user -nographic -vnc :1`
+2. `kvm \  
+-m 1024 \  
+-cdrom boot.iso \  
+-drive file=centos-5.7-pe-2.5.2.img,if=virtio,index=0 \  
+-boot d \  
+-net nic \  
+-net user \  
+-nographic -vnc :1`  
 3. Connect to the VNC console running on port 5901
 4. Run through standard kickstart procedure we use with vmware.
-5. Shut down the VM when complete.
-6. ` glance add -I admin -K puppet name=centos-5.7-pe-2.5.2  is_public=true container_format=bare disk_format=qcow2 <centos-5.7-pe-2.5.2.img`
+5. Shut down the VM when installation complete.
+6. ` glance add \  
+-I admin \  
+-K puppet \  
+name=centos-5.7-pe-2.5.2  \  
+is_public=true \  
+container_format=bare \  
+disk_format=qcow2 <centos-5.7-pe-2.5.2.img`  
+Note: The final step is take care of using the `cloudbox::image` class  
 
 ## Student Virtual machines
 The students virtual machines are built using the `vmbuilder` class. It comprises a simple set of wrapper functions for my fork of `node_openstack`.
 The reason I needed to fork `node_openstack` was to have it use the native openstack api. With the native api we are able to specify the name
 of the instances that we are building. The `vmbuilder` class calls two functions `vmbuild` and `vmlist` , it looks to see if an instance with the same
 name already is listed in the openstack configuration and if so, it does not create that instance. This allows you to terminate any of the student
-instances and rebuild them ( you will have to reinstall puppet ).
+instances and rebuild them ( you will have to reinstall puppet ). The VMs normally only spike the CPU during reboot, after that they sit around 20%
+
+## Tenant creation
+Openstack uses tenants (groups) to restrict access to virtual machines. A "students" tenant is created automatically using the `cloudbox::tenant` class.
+This is where all virtual machines live. I have also set up some execs that will automate the quota setups as they need to be raised to allow for more the 10 instances per quota
