@@ -12,3 +12,8 @@ This is the repository for the cloudbox openstack solution.
 This solution was built to replace student virtual machines in the puppet training labs.
 The solution acts as a wireless access point and allows students to connect to the private openstack network.
 Virtual machines are automatically allocated using a puppet enterprise console parameter.
+
+## Instructions
+`git clone repourl`
+`rake init`
+`dd`
