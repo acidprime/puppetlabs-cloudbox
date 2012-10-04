@@ -60,7 +60,7 @@ task :init do
     FileUtils.mkdir("#{SAVEDIR}/ubuntu_files")
   end
   cputs "Copying iso files to working directory..."
-  FileUtils.cp_r("#{SAVEDIR}/iso_mount/.","#{SAVEDIR}/ubuntu_files")
+  %x{rsync -a "#{SAVEDIR}/iso_mount/." "#{SAVEDIR}/ubuntu_files"}
 
   # Grab the copy of PE for the hypervisor
   unless File.exist?("#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz")
