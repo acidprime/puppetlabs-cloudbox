@@ -6,4 +6,5 @@ class cloudbox {
   include cloudbox::tenant
   include cloudbox::keypair
   include cloudbox::floating
+  include cloudbox::image
 }
