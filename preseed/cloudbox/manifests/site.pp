@@ -51,7 +51,7 @@ node 'cloudbox.puppetlabs.vm' {
     'fixed_ip_disassociate_timeout': value => '1';
   }
   class { 'openstack::all':
-    public_address       => '192.168.2.254',
+    public_address       => $ipaddress_eth0,
     public_interface     => $public_interface,
     private_interface    => $private_interface,
     admin_email          => $admin_email,
