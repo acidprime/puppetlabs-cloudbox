@@ -5,6 +5,7 @@ require 'net/https'
 
 STDOUT.sync = true
 
+# This rake file is designed to be rull on the cloudbox or a  ubuntu 12.0.4 VM
 RUNDIR = File.dirname(__FILE__)
 BASE_ISO_FILE  = "ubuntu-12.04-server-amd64.iso"
 BASE_ISO_URL   = "http://faro/ISO/Ubuntu/#{BASE_ISO_FILE}"
