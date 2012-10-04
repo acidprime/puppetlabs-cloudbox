@@ -7,4 +7,5 @@ class cloudbox {
   include cloudbox::keypair
   include cloudbox::floating
   include cloudbox::image
+  include cloudbox::stagemodules 
 }
