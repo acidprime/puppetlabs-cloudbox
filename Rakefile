@@ -19,6 +19,9 @@ PE_RELEASE_URL = "https://pm.puppetlabs.com/puppet-enterprise/#{PEVERSION}"
 PE_DEV_URL = "http://pluto.puppetlabs.lan/ci-ready"
 PE_URL = PE_RELEASE_URL # Set the place you want to get PE from
 PE_INSTALL_SUFFIX = '-ubuntu-12.04-amd64' 
+
+STUDENT_VM_NAME  = 'centos-5.7-pe-2.5.2.img'
+STUDENT_VM_URL   = "http://faro/ISO/KVM/#{STUDENT_VM_NAME}"
 SAVEDIR = ENV['HOME'] + "/Desktop/#{NEW_ISO_NAME}-isobuild"
 
 task :default do
@@ -72,8 +75,13 @@ task :init do
   unless File.exist?("#{RUNDIR}/preseed/cloudbox/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}")
     FileUtils.cd("#{RUNDIR}/preseed/cloudbox/", :verbose => true)
     %x{ tar -xzf "puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz" }
+    FileUtils.rm("puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz")
   end
 
+  unless File.exist?("#{RUNDIR}/preseed/cloudbox/#{STUDENT_VM_NAME}")
+    cputs "Downloading student VM..."
+    download "#{STUDENT_VM_URL}","#{RUNDIR}/preseed/cloudbox/#{STUDENT_VM_NAME}"
+  end
   # Add our customizations to the iso
   cputs "Configuring preseeding..."
   FileUtils.cp_r("#{RUNDIR}/preseed/.","#{SAVEDIR}/ubuntu_files/preseed/")
