@@ -41,11 +41,15 @@ These instructions cover using a cloudbox in class
 Classify the vmbuilder module on the master. It will read from the $students ENC parameter and spin up only instances that are not running.
 The puppet functions do not give real time feedback, so you will want to login to the Horizon web interface to see the virtual machines sping up.
 If you are connect to the systems wireless network this address will be http://10.0.0.1 . The username is _admin_ and the password is _puppet_.
+
 ## Common issues
 1. When spin'ing up over 10 VMs, the process may take up to 2 mins longer due to the openstack api limiting requests.
 2. Openstack will sometimes fail on networking when spining up 18 VMs. Simply terminate the instances and re-run `puppet agent -t`
 3. Due to the bridging the DHCP server is quite slow, I'm working on this however it takes a moment to get your lease.
   + The lease time is 7 days so this is normally only an issue in the mornings and takes 1-2 mins at most.
+4. While openstack is providing DNS records for puppetlabs.vm , DNS records will be removed on reboot of the hypervisor.
+  + The class currently uses /etc/hosts files, think of this as a backup.
+  + if you want to only use the `dns-masq` DNS you will need to shutdown and start the VMs each day rather then resume them
 
 ## Shutting the system down 
 Each night you will need to suspend the student vms if you are not going to leave the cloudbox running overnight.
@@ -125,3 +129,10 @@ I am working on automating the creation of these `qcow2` images using a rake fil
 4. Run through standard kickstart procedure we use with vmware.
 5. Shut down the VM when complete.
 6. ` glance add -I admin -K puppet name=centos-5.7-pe-2.5.2  is_public=true container_format=bare disk_format=qcow2 <centos-5.7-pe-2.5.2.img`
+
+## Student Virtual machines
+The students virtual machines are built using the `vmbuilder` class. It comprises a simple set of wrapper functions for my fork of `node_openstack`.
+The reason I needed to fork `node_openstack` was to have it use the native openstack api. With the native api we are able to specify the name
+of the instances that we are building. The `vmbuilder` class calls two functions `vmbuild` and `vmlist` , it looks to see if an instance with the same
+name already is listed in the openstack configuration and if so, it does not create that instance. This allows you to terminate any of the student
+instances and rebuild them ( you will have to reinstall puppet ).
