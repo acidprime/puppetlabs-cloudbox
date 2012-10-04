@@ -1,1 +1,3 @@
+puppet-enterprise-*
+*.img
 *.tar.gz
