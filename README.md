@@ -30,7 +30,7 @@ allow you to build an preseed'ed ubuntu install that will classify the modules. 
 ## Instructions for building preseeded iso     
 These steps are only nessary if you do not already have a cloudbox thumb drive, or would like to update it.   
 They are designed to be run from the unit itself, or in a ubuntu 12.0.4 virtual machine    
-The default URLs are for [faro](http://faro/), these require puppet labs [VPN access](https://sites.google.com/a/puppetlabs.com/main/teams/operations/vpn-access). You can update these to local servers as well ( such as apache on your system).
+The default URLs are for [faro](http://faro/), these require puppet labs [VPN access](https://sites.google.com/a/puppetlabs.com/main/teams/operations/vpn-access). You can update these to local servers as well ( such as apache on your system).  
 `git clone git@github.com:acidprime/puppetlabs-cloudbox.git`      
 `cd puppetlabs-cloudbox`      
 `rake init`      
@@ -39,18 +39,18 @@ A new iso will be automatically created that can be used to image the system.
 ### Copying iso to thumb drive     
 While you can use dd via vmware's usb bridge, I suggest copying "cloudbox.iso" to your mac and using dd natively there.    
 `diskutil unmount /Volumes/cloudbox`  
-`dd if=/tmp/cloudbox.iso of=/dev/disk4 bs=1m`   
+`dd if=/tmp/cloudbox.iso of=/dev/diskX bs=1m`   
   
 ### Imaging the cloudbox 
 Ensure ethernet is plugged into a system that supports dhcp ( such as internet sharing off of your laptop).  
-Internet access is required for the intial install.
+Internet access is required for the intial install.  
 1. [Boot system with the option/alt key held down.](http://support.apple.com/kb/HT1310)  
 2. Plug the imaged thumbdrive ( can be done before this step ) 
 3. An orange USB logo with the name "Windows" should appear  
 4. Using the arrow keys or mouse select this icon with return key.  
 5. Machine will automatically begin installation after booting from thumb drive 
 6. Machine will reboot and configure puppet master & openstack (internet access required).  
-7. You can login (root/puppet) now and continue with classroom setup 
+7. You can login (root/puppet) now and continue with [classroom setup](https://github.com/acidprime/puppetlabs-cloudbox#classroom-setup) 
     
 # Classroom setup    
 These instructions cover using a cloudbox in class   
@@ -62,7 +62,8 @@ These instructions cover using a cloudbox in class
 2. Export your ruby path (Puppet 2.7.X):    
   + `export RUBYLIB=/cloudbox/modules/node_openstack/lib/`    
 3. Provision the master Virtual Machine:   
-  + `puppet node_openstack create --identity_username=admin --identity_password=puppet --image=centos-5.7-pe-2.5.2 --type=m1.medium --tenant_name=students --keystone_host=10.0.0.1 --nova_host=10.0.0.1 --name=master --trace`   
+  + `puppet node_openstack create 
+--identity_username=admin --identity_password=puppet --image=centos-5.7-pe-2.5.2 --type=m1.medium --tenant_name=students --keystone_host=10.0.0.1 --nova_host=10.0.0.1 --name=master --trace`   
 
 4. You can now login to your master using the ip address allocated.
   + You can find the allocated ip using the horizon web interface at [http://10.0.0.1](http://10.0.0.1)
@@ -89,7 +90,7 @@ If you are connected to the systems wireless network this address will be [http:
   + Single host so they are not needed. I am going to fix this later.
 7. The Nova Volume service fails during startup.
   + its not needed and will be fixed later.
-
+8. You will want to unclassify the `vmbuilder` class when complete as it increases the puppet run times.
 ## Shutting the system down     
 Each night you will need to suspend the student vms if you are not going to leave the cloudbox running overnight.    
 __working on script/face for this__    
@@ -97,7 +98,7 @@ Once all virtual machines are suspended ( not paused ) you can issue a `shutdown
     
 ## Handy commands to know    
 `source /root/openrc`      
-This command store the credentials used for the command line utils.    
+This command source's the ENV credentials used for the command line utils.    
 `nova-manage vm list`      
 Get a list of the current running virtual machines.      
 `nova suspend _instanceid_`    
