@@ -16,9 +16,9 @@ Multiple things prompted its creation:
 1. The lack of interconnectivity on the wireless networks at many of our training sites.      
 2. The expensive class time of getting a large number of student virtual machines running.    
 3. To demo the Puppet cloud provisioner in the training classes.  
-4. Consistancy in the course delivery
+4. Consistancy in the classroom environment. 
  
-The solution acts as a wireless access point and allows students to connect to the private openstack network.    
+The solution acts as a [wireless access point](https://github.com/acidprime/puppetlabs-cloudbox#wireless-access-point) and allows students to connect to the private openstack network.    
 Internet access ( if avaiable ) is provided by the systems built in ethernet port eth0   
 Each student simply needs an ssh client and wireless card to complete the class.    
 If a student is unable to connect to the wireless due to hardware issues, the horizon interface has a vnc console that runs in most web browsers, this site is accessible on the public interface on port 80 (http).  
@@ -30,7 +30,7 @@ allow you to build an preseed'ed ubuntu install that will classify the modules. 
 ## Instructions for building preseeded iso     
 These steps are only nessary if you do not already have a cloudbox thumb drive, or would like to update it.   
 They are designed to be run from the unit itself, or in a ubuntu 12.0.4 virtual machine    
-The default URLs are for faro, these require puppet labs VPN access. You can update these to local servers as well ( such as apache on your system).
+The default URLs are for [faro](http://faro/), these require puppet labs [VPN access](https://sites.google.com/a/puppetlabs.com/main/teams/operations/vpn-access). You can update these to local servers as well ( such as apache on your system).
 `git clone git@github.com:acidprime/puppetlabs-cloudbox.git`      
 `cd puppetlabs-cloudbox`      
 `rake init`      
@@ -44,35 +44,35 @@ While you can use dd via vmware's usb bridge, I suggest copying "cloudbox.iso" t
 ### Imaging the cloudbox 
 Ensure ethernet is plugged into a system that supports dhcp ( such as internet sharing off of your laptop).  
 Internet access is required for the intial install.
-1. Boot system with the option/alt key held down.  
+1. [Boot system with the option/alt key held down.](http://support.apple.com/kb/HT1310)  
 2. Plug the imaged thumbdrive ( can be done before this step ) 
 3. An orange USB logo with the name "Windows" should appear  
 4. Using the arrow keys or mouse select this icon with return key.  
 5. Machine will automatically begin installation after booting from thumb drive 
-6. Machine will reboot and configure puppet master & openstack.  
-7. You can login now and continue with classroom setup 
+6. Machine will reboot and configure puppet master & openstack (internet access required).  
+7. You can login (root/puppet) now and continue with classroom setup 
     
 # Classroom setup    
 These instructions cover using a cloudbox in class   
 
 ## Provisioning master virtual machine (for use in class) 
 1. Connect your laptop to the `Puppet` wireless network
-1. Login to the cloudbox using ssh://root@10.0.0.1
+1. Login to the cloudbox using [ssh://root@10.0.0.1](ssh://root@10.0.0.1)
   + The username is _root_ and the password is _puppet_.   
 2. Export your ruby path (Puppet 2.7.X):    
   + `export RUBYLIB=/cloudbox/modules/node_openstack/lib/`    
-3. Provision the master Virtual Machine:    
+3. Provision the master Virtual Machine:   
   + `puppet node_openstack create --identity_username=admin --identity_password=puppet --image=centos-5.7-pe-2.5.2 --type=m1.medium --tenant_name=students --keystone_host=10.0.0.1 --nova_host=10.0.0.1 --name=master --trace`   
 
 4. You can now login to your master using the ip address allocated.
-  + You can find the allocated ip using the horizon web interface at http://10.0.0.1
+  + You can find the allocated ip using the horizon web interface at [http://10.0.0.1](http://10.0.0.1)
   + The horizon credentials are _admin_ and the password is _puppet_ 
 
 ## Provisioning agent virtual machines    
 This step is done as a demo in class, I suggest connecting to the horizon web interface prior to this step.
 Classify the `vmbuilder` module on the master. It will read from the $students ENC parameter and spin up only instances that are not running.    
 The puppet functions do not give real time feedback, so you will want to login to the Horizon web interface to see the virtual machines sping up.    
-If you are connected to the systems wireless network this address will be http://10.0.0.1 . The username is _admin_ and the password is _puppet_.    
+If you are connected to the systems wireless network this address will be [http://10.0.0.1](http://10.0.0.1) . The username is _admin_ and the password is _puppet_.    
     
 ## Known issues    
 1. When spin'ing up over 10 VMs, the process may take up to 2 mins longer due to the openstack api limiting requests.    
@@ -93,22 +93,22 @@ If you are connected to the systems wireless network this address will be http:/
 ## Shutting the system down     
 Each night you will need to suspend the student vms if you are not going to leave the cloudbox running overnight.    
 __working on script/face for this__    
-Once all virtual machines are suspended ( not paused ) you can issue a `shutdown -h now` to the hypervisor. 
+Once all virtual machines are suspended ( not paused ) you can issue a `shutdown -h now` to the hypervisor.   
     
 ## Handy commands to know    
 `source /root/openrc`      
 This command store the credentials used for the command line utils.    
 `nova-manage vm list`      
-Get a list of the current running virtual machines.    
-`nova suspend _instanceid_`      
-Suspend the specified instance    
-`nova resume _instanceid_`      
-Resume the specified instance    
-`nova reboot _instanceid_`      
-Reboot the specified instance    
-`keystone --token puppet user-list`      
-View the user list in keystone    
-`keystone --token puppet tenant-list`      
+Get a list of the current running virtual machines.      
+`nova suspend _instanceid_`    
+Suspend the specified instance      
+`nova resume _instanceid_`   
+Resume the specified instance     
+`nova reboot _instanceid_`   
+Reboot the specified instance  
+`keystone --token puppet user-list`     
+View the user list in keystone  
+`keystone --token puppet tenant-list`   
 View the tenant (group) list in keystone   
 
 # Technical overview    
