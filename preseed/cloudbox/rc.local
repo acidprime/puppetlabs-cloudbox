@@ -20,6 +20,10 @@ for x in 1 2 3 ; do
   /cloudbox/manifests/site.pp | tee -a /cloudbox/cloudbox.log
 done
 
+cp -rvp /cloudbox/modules/. /etc/puppetlabs/puppet/modules/
+cp -rvp /cloudbox/manifests/. /etc/puppetlabs/puppet/manifests/
+rm -rf /cloudbox/modules/stlib
+
 # Disable this for next reboot
 if [ -f /opt/puppet/bin/puppet ] ; then
   printf "#!/bin/bash\nexit 0\n" >/etc/rc.local
