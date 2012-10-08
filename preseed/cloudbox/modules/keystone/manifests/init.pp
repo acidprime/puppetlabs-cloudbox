@@ -48,7 +48,9 @@ class keystone(
   $log_verbose    = 'False',
   $log_debug      = 'False',
   $use_syslog     = 'False',
-  $catalog_type   = 'sql'
+  $catalog_type   = 'sql',
+  $backend_driver = 'keystone.token.backends.kvs.Token',
+  $enabled        = true
 ) {
 
   validate_re($catalog_type, 'template|sql')
@@ -64,7 +66,6 @@ class keystone(
   package { 'keystone':
     name   => $::keystone::params::package_name,
     ensure => $package_ensure,
-    notify => Exec['keystone-manage db_sync'],
   }
 
   group { 'keystone':
@@ -93,7 +94,7 @@ class keystone(
     group   => 'keystone',
     mode    => '0600',
     require => Package['keystone'],
-    notify  => [Service['keystone'], Exec['keystone-manage db_sync']],
+    notify  => Service['keystone'],
   }
 
   # config sections
@@ -106,7 +107,7 @@ class keystone(
       'compute_port' => $compute_port,
       'log_verbose'  => $log_verbose,
       'log_debug'    => $log_debug,
-      'use_syslog'   => $use_syslog
+      'use_syslog'   => $use_syslog,
     },
     order  => '00',
   }
@@ -127,23 +128,35 @@ class keystone(
   }
 
   keystone::config { 'footer':
-    order    => '99'
+    order    => '99',
+    config => {
+      'backend_driver' => $backend_driver
+    },
+  }
+
+  if $enabled {
+    $service_ensure = 'running'
+  } else {
+    $service_ensure = 'stopped'
   }
 
   service { 'keystone':
-    ensure     => running,
     name       => $::keystone::params::service_name,
-    enable     => true,
+    ensure     => $service_ensure,
+    enable     => $enabled,
     hasstatus  => true,
     hasrestart => true,
     provider   => $::keystone::params::service_provider,
-    subscribe  => Exec['keystone-manage db_sync'],
   }
 
-  # this probably needs to happen more often than just when the db is
-  # created
-  exec { 'keystone-manage db_sync':
-    path        => '/usr/bin',
-    refreshonly => true,
+  if $enabled {
+    # this probably needs to happen more often than just when the db is
+    # created
+    exec { 'keystone-manage db_sync':
+      path        => '/usr/bin',
+      refreshonly => true,
+      notify      => Service['keystone'],
+      subscribe   => [Package['keystone'], Concat['/etc/keystone/keystone.conf']]
+    }
   }
 }

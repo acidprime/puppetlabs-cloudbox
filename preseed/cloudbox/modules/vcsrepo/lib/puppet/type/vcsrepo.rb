@@ -21,6 +21,15 @@ Puppet::Type.newtype(:vcsrepo) do
 
   feature :ssh_identity,
           "The provider supports a configurable SSH identity file"
+          
+  feature :user,
+          "The provider can run as a different user"
+
+  feature :modules,
+          "The repository contains modules that can be chosen of"
+
+  feature :multiple_remotes,
+          "The repository tracks multiple remote repositories"
 
   ensurable do
     attr_accessor :latest
@@ -37,15 +46,20 @@ Puppet::Type.newtype(:vcsrepo) do
           else
             return false
           end
+		when :bare
+		  return is == :bare
       end
     end
 
     newvalue :present do
+      notice "Creating repository from present"
       provider.create
     end
 
     newvalue :bare, :required_features => [:bare_repositories] do
-      provider.create
+	  if !provider.exists?
+        provider.create
+      end
     end
 
     newvalue :absent do
@@ -65,6 +79,7 @@ Puppet::Type.newtype(:vcsrepo) do
         notice "Updating to latest '#{reference}' revision"
         provider.revision = reference
       else
+        notice "Creating repository from latest"
         provider.create
       end
     end
@@ -73,7 +88,7 @@ Puppet::Type.newtype(:vcsrepo) do
       prov = @resource.provider
       if prov
         if prov.working_copy_exists?
-          prov.latest? ? :latest : :present
+          (@should.include?(:latest) && prov.latest?) ? :latest : :present
         elsif prov.class.feature?(:bare_repositories) and prov.bare_exists?
           :bare
         else
@@ -86,7 +101,7 @@ Puppet::Type.newtype(:vcsrepo) do
 
   end
 
-  newparam(:path) do
+  newparam :path do
     desc "Absolute path to repository"
     isnamevar
     validate do |value|
@@ -97,32 +112,36 @@ Puppet::Type.newtype(:vcsrepo) do
     end
   end
 
-  newparam(:source) do
+  newparam :source do
     desc "The source URI for the repository"
   end
 
-  newparam(:fstype, :required_features => [:filesystem_types]) do
+  newparam :fstype, :required_features => [:filesystem_types] do
     desc "Filesystem type"
   end
 
-  newproperty(:revision) do
+  newproperty :revision do
     desc "The revision of the repository"
     newvalue(/^\S+$/)
   end
 
-  newparam(:owner) do
+  newparam :owner do
     desc "The user/uid that owns the repository files"
   end
 
-  newparam(:group) do
+  newparam :group do
     desc "The group/gid that owns the repository files"
   end
 
-  newparam(:excludes) do
+  newparam :user do
+    desc "The user to run for repository operations"
+  end
+
+  newparam :excludes do
     desc "Files to be excluded from the repository"
   end
 
-  newparam(:force) do
+  newparam :force do
     desc "Force repository creation, destroying any files on the path in the process."
     newvalues(:true, :false)
     defaultto false
@@ -148,4 +167,14 @@ Puppet::Type.newtype(:vcsrepo) do
   newparam :identity, :required_features => [:ssh_identity] do
     desc "SSH identity file"
   end
+  
+  newparam :module, :required_features => [:modules] do
+    desc "The repository module to manage"
+  end
+
+  newparam :remote, :required_features => [:multiple_remotes] do
+    desc "The remote repository to track"
+    defaultto "origin"
+  end
+
 end

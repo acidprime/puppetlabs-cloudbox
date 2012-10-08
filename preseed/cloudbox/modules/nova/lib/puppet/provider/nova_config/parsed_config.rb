@@ -1,11 +1,9 @@
 require 'puppet/provider/parsedfile'
 
-novaconf = "/etc/nova/nova.conf"
-
 Puppet::Type.type(:nova_config).provide(
   :configfile,
   :parent => Puppet::Provider::ParsedFile,
-  :default_target => novaconf,
+  :default_target => Puppet::Type.type(:nova_config).default_target,
   :filetype => :flat
 ) do
 

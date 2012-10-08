@@ -19,7 +19,15 @@ class Puppet::Provider::Keystone < Puppet::Provider
   end
 
   def self.get_admin_endpoint
-    "http://127.0.0.1:#{keystone_file['DEFAULT']['admin_port'].strip}/v2.0/"
+    if keystone_file and keystone_file['DEFAULT'] and keystone_file['DEFAULT']['bind_host']
+      host = keystone_file['DEFAULT']['bind_host'].strip
+      if host == "0.0.0.0"
+        host = "127.0.0.1"
+      end
+    else
+      host = "127.0.0.1"
+    end
+    "http://#{host}:#{keystone_file['DEFAULT']['admin_port'].strip}/v2.0/"
   end
 
   def self.keystone_file
@@ -56,10 +64,10 @@ class Puppet::Provider::Keystone < Puppet::Provider
 
   private
 
-    def self.list_keystone_objects(type, number_columns)
+    def self.list_keystone_objects(type, number_columns, *args)
       # this assumes that all returned objects are of the form
       # id, name, enabled_state, OTHER
-      list = (auth_keystone("#{type}-list").split("\n")[3..-2] || []).collect do |line|
+      list = (auth_keystone("#{type}-list", args).split("\n")[3..-2] || []).collect do |line|
         row = line.split(/\s*\|\s*/)[1..-1]
         if row.size != number_columns
           raise(Puppet::Error, "Expected #{number_columns} columns for #{type} row, found #{row.size}. Line #{line}")
@@ -68,16 +76,18 @@ class Puppet::Provider::Keystone < Puppet::Provider
       end
       list
     end
-
     def self.get_keystone_object(type, id, attr)
-      auth_keystone("#{type}-get", id).split("\n")[3..-2].each do |line|
-        if line =~ /^\|\s*#{attr}\s*\|\s*(.*)?\s+\|$/ 
-          return $1.strip
+      auth_keystone("#{type}-get", id).split(/\|\n/m).each do |line|  
+        if line =~ /\|(\s+)?#{attr}(\s+)?\|/
+          if line.kind_of?(Array)
+            return line[0].split("|")[2].strip
+          else
+            return  line.split("|")[2].strip
+          end
         else
           nil
         end
-      end
+      end 
       raise(Puppet::Error, "Could not find colummn #{attr} when getting #{type} #{id}")
-    end
-
+    end 
 end

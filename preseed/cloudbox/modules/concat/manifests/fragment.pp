@@ -1,5 +1,5 @@
 # Puts a file fragment into a directory previous setup using concat
-# 
+#
 # OPTIONS:
 #   - target    The file that these fragments belong to
 #   - content   If present puts the content into the file
@@ -28,6 +28,9 @@ define concat::fragment($target, $content='', $source='', $order=10, $ensure = '
           case $ensure {
             '', 'absent', 'present', 'file', 'directory': {
               crit('No content, source or symlink specified')
+            }
+            default: {
+              #do nothing, make puppet-lint happy.
             }
           }
         }

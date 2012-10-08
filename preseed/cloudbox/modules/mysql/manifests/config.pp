@@ -6,7 +6,7 @@
 #   [*old_root_password*] - previous root user password,
 #   [*bind_address*]      - address to bind service.
 #   [*port*]              - port to bind service.
-#   [*etc_root_password*] - whether to save /etc/.my.cnf.
+#   [*etc_root_password*] - whether to save /etc/my.cnf.
 #   [*service_name*]      - mysql service name.
 #   [*config_file*]       - my.cnf configuration file path.
 #   [*socket*]            - mysql socket.
@@ -15,6 +15,10 @@
 #   [*ssl_ca]             - path to ssl-ca
 #   [*ssl_cert]           - path to ssl-cert
 #   [*ssl_key]            - path to ssl-key
+#   [*log_error]          - path to mysql error log
+#   [*default_engine]     - configure a default table engine
+#   [*root_group]         - use specified group for root-owned files
+#   [*restart]            - whether to restart mysqld (true/false)
 #
 # Actions:
 #
@@ -38,6 +42,7 @@ class mysql::config(
   $service_name      = $mysql::params::service_name,
   $config_file       = $mysql::params::config_file,
   $socket            = $mysql::params::socket,
+  $pidfile           = $mysql::params::pidfile,
   $datadir           = $mysql::params::datadir,
   $ssl               = $mysql::params::ssl,
   $ssl_ca            = $mysql::params::ssl_ca,
@@ -45,14 +50,18 @@ class mysql::config(
   $ssl_key           = $mysql::params::ssl_key,
   $log_error         = $mysql::params::log_error,
   $default_engine    = 'UNSET',
-  $root_group        = $mysql::params::root_group
+  $root_group        = $mysql::params::root_group,
+  $restart           = $mysql::params::restart
 ) inherits mysql::params {
 
   File {
     owner  => 'root',
     group  => $root_group,
     mode   => '0400',
-    notify => Exec['mysqld-restart'],
+    notify    => $restart ? {
+      true => Exec['mysqld-restart'],
+      false => undef,
+    },
   }
 
   if $ssl and $ssl_ca == undef {
@@ -81,15 +90,18 @@ class mysql::config(
   if $root_password != 'UNSET' {
     case $old_root_password {
       '':      { $old_pw='' }
-      default: { $old_pw="-p${old_root_password}" }
+      default: { $old_pw="-p'${old_root_password}'" }
     }
 
     exec { 'set_mysql_rootpw':
-      command   => "mysqladmin -u root ${old_pw} password ${root_password}",
+      command   => "mysqladmin -u root ${old_pw} password '${root_password}'",
       logoutput => true,
-      unless    => "mysqladmin -u root -p${root_password} status > /dev/null",
+      unless    => "mysqladmin -u root -p'${root_password}' status > /dev/null",
       path      => '/usr/local/sbin:/usr/bin:/usr/local/bin',
-      notify    => Exec['mysqld-restart'],
+      notify    => $restart ? {
+        true => Exec['mysqld-restart'],
+        false => undef,
+      },
       require   => File['/etc/mysql/conf.d'],
     }
 

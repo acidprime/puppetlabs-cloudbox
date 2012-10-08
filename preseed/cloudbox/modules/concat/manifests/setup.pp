@@ -1,8 +1,8 @@
 # Sets up the concat system.
 #
-# $concatdir should point to a place where you wish the fragments to
-# live. This should not be somewhere like /tmp since ideally these files
-# should not be deleted ever, puppet should always manage them
+# $concatdir is where the fragments live and is set on the fact concat_basedir.
+# Since puppet should always manage files in $concatdir and they should
+# not be deleted ever, /tmp is not an option.
 #
 # $puppetversion should be either 24 or 25 to enable a 24 compatible
 # mode, in 24 mode you might see phantom notifies this is a side effect
@@ -18,17 +18,24 @@ class concat::setup {
     root    => 0,
     default => $id
   }
-  $concatdir = $::concat_basedir
+
+  if $::concat_basedir {
+    $concatdir = $::concat_basedir
+  } else {
+    fail ("\$concat_basedir not defined. Try running again with pluginsync enabled")
+  }
+
   $majorversion = regsubst($::puppetversion, '^[0-9]+[.]([0-9]+)[.][0-9]+$', '\1')
+  $fragments_source = $majorversion ? {
+    24      => 'puppet:///concat/concatfragments.sh',
+    default => 'puppet:///modules/concat/concatfragments.sh'
+  }
 
   file{"${concatdir}/bin/concatfragments.sh":
     owner  => $id,
     group  => $root_group,
     mode   => '0755',
-    source => $majorversion ? {
-      24      => 'puppet:///concat/concatfragments.sh',
-      default => 'puppet:///modules/concat/concatfragments.sh'
-    };
+    source => $fragments_source;
 
   [ $concatdir, "${concatdir}/bin" ]:
     ensure => directory,

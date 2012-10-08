@@ -24,21 +24,25 @@ describe 'keystone' do
       'log_verbose'     => 'False',
       'log_debug'       => 'False',
       'use_syslog'      => 'False',
-      'catalog_type'    => 'template'
+      'catalog_type'    => 'template',
+      'backend_driver'  => 'keystone.token.backends.kvs.Token',
+      'enabled'         => true
     }
   end
 
   [{},
    {
       'package_ensure'  => 'latest',
-      'bind_host'        => '127.0.0.1',
+      'bind_host'       => '127.0.0.1',
       'public_port'     => '5001',
       'admin_port'      => '35358',
       'admin_token'     => 'service_token_override',
       'compute_port'    => '3001',
       'log_verbose'     => 'True',
       'log_debug'       => 'True',
-      'catalog_type'    => 'sql'
+      'catalog_type'    => 'sql',
+      'backend_driver'  => 'something_else',
+      'enabled'         => false
     }
   ].each do |param_set|
 
@@ -56,8 +60,7 @@ describe 'keystone' do
       it { should contain_class('concat::setup') }
 
       it { should contain_package('keystone').with(
-        'ensure' => param_hash['package_ensure'],
-        'notify' => 'Exec[keystone-manage db_sync]'
+        'ensure' => param_hash['package_ensure']
       ) }
 
       it { should contain_group('keystone').with(
@@ -82,18 +85,25 @@ describe 'keystone' do
         'owner'   => 'keystone',
         'group'   => 'keystone',
         'require' => 'Package[keystone]',
-        'notify'  => ['Service[keystone]', 'Exec[keystone-manage db_sync]']
-      )}
-
-      it { should contain_service('keystone').with(
-        'ensure'     => 'running',
-        'enable'     => 'true',
-        'hasstatus'  => 'true',
-        'hasrestart' => 'true',
-        'subscribe'  => 'Exec[keystone-manage db_sync]'
+        'notify'  => 'Service[keystone]'
       ) }
 
-      it { should contain_exec('keystone-manage db_sync').with_refreshonly('true') }
+      it { should contain_service('keystone').with(
+        'ensure'     => param_hash['enabled'] ? 'running' : 'stopped',
+        'enable'     => param_hash['enabled'],
+        'hasstatus'  => 'true',
+        'hasrestart' => 'true'
+      ) }
+
+      it 'should only migrate the db if $enabled is true' do
+        if param_hash[:enabled]
+          should contain_exec('keystone-manage db_sync').with(
+            :refreshonly => true,
+            :notify      => 'Service[keystone]',
+            :subscribe   => ['Package[keystone]', 'Concat[/etc/keystone/keystone.conf]']
+          )
+        end
+      end
 
       it 'should correctly configure catalog based on catalog_type'
 
@@ -124,8 +134,16 @@ describe 'keystone' do
           ]
         )
       end
-      it { should create_file(
-        '/var/lib/puppet/concat/_etc_keystone_keystone.conf/fragments/99_kestone-footer') }
+      it do'should create a footer file with the default backend driver'
+        verify_contents(
+          subject,
+          '/var/lib/puppet/concat/_etc_keystone_keystone.conf/fragments/99_kestone-footer',
+          [
+            '[token]',
+            "driver = #{param_hash['backend_driver']}",
+          ]
+        )
+      end
     end
   end
 end
