@@ -8,15 +8,14 @@ STDOUT.sync = true
 # This rake file is designed to be rull on the cloudbox or a  ubuntu 12.0.4 VM
 RUNDIR = File.dirname(__FILE__)
 # Download PE
-PEVERSION = '2.6.0'
-PE_RELEASE_URL = "https://pm.puppetlabs.com/puppet-enterprise/#{PEVERSION}"
-PE_DEV_URL = "http://pluto.puppetlabs.lan/ci-ready"
-PE_URL = PE_RELEASE_URL # Set the place you want to get PE from
+PEVERSION = '2.6.1'
+PE_RELEASE_URL = "https://s3.amazonaws.com/pe-builds/released/#{PEVERSION}"
 PE_INSTALL_SUFFIX = '-el-6-i386'
+PE_URL = "#{PE_RELEASE_URL}/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz"
 
-BASE_ISO_FILE  = "CentOS-6.0-x86_64-bin-DVD1.iso"
-BASE_ISO_URL   = "http://faro/ISO/CentOS/CentOS-6.0-x86_64-bin-DVD/#{BASE_ISO_FILE}"
-
+BASE_ISO_FILE  = "CentOS-6.3-i386-bin-DVD1.iso"
+#BASE_ISO_URL   = "http://faro/ISO/CentOS/CentOS-6.0-x86_64-bin-DVD/#{BASE_ISO_FILE}"
+BASE_ISO_URL   = "http://mirror.chpc.utah.edu/pub/centos/6.3/isos/x86_64/#{BASE_ISO_FILE}"
 NEW_ISO_NAME   = "centos-6.0-pe-#{PEVERSION}"
 NEW_ISO_FILE   = "#{NEW_ISO_NAME}.iso"
 
@@ -66,7 +65,7 @@ task :init do
   # Grab the copy of PE for the hypervisor
   unless File.exist?("#{RUNDIR}/kickstart/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz")
     cputs "Downloading PE #{PEVERSION} for student VM..."
-    download "#{PE_URL}/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz", "#{RUNDIR}/kickstart/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz"
+    download "#{PE_URL}", "#{RUNDIR}/kickstart/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.tar.gz"
   end
 
   ## Extract the installer

@@ -8,4 +8,5 @@ class cloudbox {
   include cloudbox::floating
   include cloudbox::image
   include cloudbox::stagemodules 
+  include cloudbox::buildscript
 }
