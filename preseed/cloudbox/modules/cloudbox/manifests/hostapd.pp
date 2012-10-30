@@ -2,7 +2,7 @@ class cloudbox::hostapd {
   $hostapd_interface = 'wlan0'
   $hostapd_bridge    = 'br100'
   $hostapd_ssid      = 'Puppet'
-  $hostapd_wpa        = true
+  $hostapd_wpa        = false 
   $hostapd_wpa_passphrase = 'puppetlabs'
   include apt
   apt::ppa{ 'ppa:mpodroid/mactel': }
