@@ -144,9 +144,19 @@ def download(url,path)
     raise "Link #{url} is not HTTP(S)"
   end
   net.start do |http|
-    resp = http.get(u.path)
-    open(path, "wb") do |file|
-      file.write(resp.body)
+    #resp = http.get(u.path)
+    #open(path, "wb") do |file|
+    #  file.write(resp.body)
+    #end
+    file = open(path,"wb")
+    begin
+        http.request_get(u.path) do |resp|
+            resp.read_body do |segment|
+                file.write(segment)
+            end
+        end
+    ensure
+        file.close()
     end
   end
 end
