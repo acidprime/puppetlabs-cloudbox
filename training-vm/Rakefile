@@ -15,7 +15,7 @@ PE_URL = "#{PE_RELEASE_URL}/puppet-enterprise-#{PEVERSION}#{PE_INSTALL_SUFFIX}.t
 
 BASE_ISO_FILE  = "CentOS-6.3-i386-bin-DVD1.iso"
 #BASE_ISO_URL   = "http://faro/ISO/CentOS/CentOS-6.0-x86_64-bin-DVD/#{BASE_ISO_FILE}"
-BASE_ISO_URL   = "http://mirror.chpc.utah.edu/pub/centos/6.3/isos/x86_64/#{BASE_ISO_FILE}"
+BASE_ISO_URL   = "http://mirror.chpc.utah.edu/pub/centos/6.3/isos/i386/#{BASE_ISO_FILE}"
 NEW_ISO_NAME   = "centos-6.0-pe-#{PEVERSION}"
 NEW_ISO_FILE   = "#{NEW_ISO_NAME}.iso"
 
